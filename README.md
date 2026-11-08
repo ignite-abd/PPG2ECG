@@ -1,5 +1,7 @@
 # [NeurIPS 2026] PPG2ECG: Physiology-Guided Latent Rectified Flow for Electro-Hemodynamic PPG-to-ECG Generation
 
+**[Project Page](https://ignite-abd.github.io/PPG2ECG/) · [Paper (arXiv)](https://arxiv.org/abs/2605.12541)**
+
 ![PPG2ECG framework overview](figure/PPG2ECG.png)
 
 ## Overview

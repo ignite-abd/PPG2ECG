@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PPG2ECG · Physiology-Guided Latent Rectified Flow for PPG-to-ECG Generation</title>
+  <meta name="description" content="PPG2ECG (NeurIPS 2026): a physiology-guided latent rectified flow that generates ECG from PPG, guided by an electro-hemodynamic simulator.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="PPG2ECG · NeurIPS 2026">
+  <meta property="og:description" content="Physiology-Guided Latent Rectified Flow for Electro-Hemodynamic PPG-to-ECG Generation.">
+  <meta property="og:image" content="https://ignite-abd.github.io/PPG2ECG/assets/framework.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1220'/%3E%3Cpolyline points='6,36 18,36 24,22 30,50 36,16 42,42 46,36 58,36' fill='none' stroke='%233ad29f' stroke-width='4' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <a class="wordmark" href="#top"><span class="wordmark-pulse" aria-hidden="true"></span>PPG2ECG</a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#method">Method</a>
+      <a href="#cases">Cases</a>
+      <a href="#results">Results</a>
+      <a href="#bibtex">BibTeX</a>
+    </nav>
+    <a class="btn btn-small" href="https://github.com/ignite-abd/PPG2ECG" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+      GitHub
+    </a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-text">
+        <span class="badge">NeurIPS 2026</span>
+        <h1 class="title">PPG2ECG</h1>
+        <p class="tagline">Physiology-Guided Latent Rectified Flow for Electro-Hemodynamic PPG-to-ECG Generation</p>
+        <p class="authors">
+          Xiaoda Wang<sup>1,3</sup>, Minxiao Wang<sup>2</sup>, Kaiqiao Han<sup>3</sup>, Defu Cao<sup>4</sup>, Ching Chang<sup>3</sup>, Yidan Shi<sup>3</sup>,
+          Runze Yan<sup>2</sup>, Xiao Luo<sup>5</sup>, Yan Liu<sup>4</sup>, Xiao Hu<sup>2</sup>, Yizhou Sun<sup>3</sup>, Wei Wang<sup>3</sup>, Carl Yang<sup>1</sup>
+        </p>
+        <p class="affils">
+          <sup>1</sup>Department of Computer Science, Emory University &nbsp;·&nbsp;
+          <sup>2</sup>Nell Hodgson Woodruff School of Nursing, Emory University &nbsp;·&nbsp;
+          <sup>3</sup>Department of Computer Science, UCLA &nbsp;·&nbsp;
+          <sup>4</sup>Department of Computer Science, USC &nbsp;·&nbsp;
+          <sup>5</sup>Department of Statistics, University of Wisconsin–Madison
+        </p>
+        <div class="cta">
+          <a class="btn btn-primary" href="https://arxiv.org/abs/2605.12541" target="_blank" rel="noopener">Paper · arXiv</a>
+          <a class="btn btn-ghost" href="https://github.com/ignite-abd/PPG2ECG" target="_blank" rel="noopener">Code</a>
+          <a class="btn btn-ghost" href="#bibtex">BibTeX</a>
+        </div>
+      </div>
+
+      <div class="hero-demo">
+        <canvas id="heroCanvas" class="hero-canvas" aria-label="Animated illustration: a PPG trace is encoded, transported by a latent rectified flow, and decoded into an ECG trace"></canvas>
+        <p class="demo-caption">
+          Live illustration. Both traces are driven by one shared cardiac phase from the electro-hemodynamic simulator described below; they are not recorded patient data.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHY ============ -->
+  <section class="section section-tight">
+    <div class="container">
+      <div class="why-grid reveal">
+        <div class="why-item">
+          <span class="why-k">ECG</span>
+          <p>The clinical standard for cardiac assessment, but it needs dedicated hardware that does not scale to daily-life monitoring.</p>
+        </div>
+        <div class="why-item">
+          <span class="why-k">PPG</span>
+          <p>Ubiquitous in wearables, yet it lacks ECG-specific diagnostic morphology and is corrupted by motion and sensor noise.</p>
+        </div>
+        <div class="why-item">
+          <span class="why-k">PPG → ECG</span>
+          <p>PPG2ECG recovers electrical morphology and timing from the peripheral pulse, with physiology as the guide rather than data alone.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ METHOD ============ -->
+  <section class="section" id="method">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Method</span>
+        <h2>Physiology guides every stage</h2>
+        <p class="lead">An electro-hemodynamic simulator co-models ECG and PPG through shared cardiac phase dynamics. It shapes the latent space of a Physiology-Aware AutoEncoder, then regularizes a PPG-conditioned latent rectified flow that generates the ECG.</p>
+      </div>
+
+      <figure class="paper-card figure-card reveal">
+        <img src="assets/framework.png" alt="PPG2ECG framework: (a) electro-hemodynamic physiological simulator, (b) physiology-aware autoencoder, (c) simulator-guided latent rectified flow" loading="lazy">
+      </figure>
+
+      <div class="method-grid">
+        <article class="card reveal">
+          <span class="tag tag-blue">(a)</span>
+          <h3>Electro-Hemodynamic Physiological Simulator</h3>
+          <p>A shared cardiac phase drives an ECG simulator and a PPG simulator, so the two modalities are linked through the pulse-arrival delay, with class-specific parameters fitted per ICD-stratified group.</p>
+        </article>
+        <article class="card reveal" style="--delay: 80ms">
+          <span class="tag tag-green">(b)</span>
+          <h3>Physiology-Aware AutoEncoder</h3>
+          <p>Dual PPG and ECG paths with shared blocks and modality adapters learn an aligned electro-hemodynamic latent space at each signal's native rate (40 Hz PPG, 120 Hz ECG).</p>
+        </article>
+        <article class="card reveal" style="--delay: 160ms">
+          <span class="tag tag-purple">(c)</span>
+          <h3>Simulator-Guided Latent Rectified Flow</h3>
+          <p>A PPG-conditioned vector field transports Gaussian noise to ECG latents. Simulator losses enforce ECG-side morphology consistency and ECG-to-PPG forward hemodynamic consistency during training only; inference needs just the PPG.</p>
+        </article>
+      </div>
+
+      <div class="card sim-card reveal">
+        <div class="sim-head">
+          <div>
+            <span class="eyebrow">Simulator, live</span>
+            <h3>One cardiac phase, two signals</h3>
+          </div>
+          <p class="sim-note">The PPG pulse arrives one pulse-arrival delay (δ<sub>PAT</sub>) after each R peak. Heart rate drifts slowly to show the phase coupling.</p>
+        </div>
+        <canvas id="simCanvas" class="sim-canvas" aria-label="Animated electro-hemodynamic simulator: a rotating cardiac phase dial drives synchronized ECG and PPG traces with a marked pulse-arrival delay"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CASES ============ -->
+  <section class="section" id="cases">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Case studies</span>
+        <h2>Three patients, five models</h2>
+        <p class="lead">Held-out 10-second MC-MED windows from different patients. Pick a model to overlay its generated ECG on the reference. Every trace below is taken directly from the paper figure.</p>
+      </div>
+
+      <div class="method-bar reveal" id="methodBar" role="group" aria-label="Choose a model">
+        <button type="button" data-method="RDDM">RDDM</button>
+        <button type="button" data-method="CardioGAN">CardioGAN</button>
+        <button type="button" data-method="CardioFlow">CardioFlow</button>
+        <button type="button" data-method="PPGFlowECG">PPGFlowECG</button>
+        <button type="button" data-method="PPG2ECG" class="is-active is-ours">PPG2ECG</button>
+      </div>
+
+      <div class="cases-grid" id="casesGrid">
+        <article class="paper-card case-card reveal" data-case="0">
+          <header class="case-head">
+            <h3>Case 1</h3>
+            <span class="case-meta">Noisy reference · 107 bpm</span>
+          </header>
+          <canvas class="case-canvas" aria-label="Case 1: input PPG, reference ECG, and the selected model's generated ECG"></canvas>
+          <footer class="case-foot">
+            <span class="legend"><i class="sw sw-ppg"></i>PPG <i class="sw sw-ecg"></i>Reference ECG <i class="sw sw-gen"></i><span class="legend-gen">PPG2ECG</span></span>
+            <span class="chip chip-r" data-r="0.84">Pearson <em>r</em> = 0.84</span>
+          </footer>
+        </article>
+        <article class="paper-card case-card reveal" data-case="1" style="--delay: 80ms">
+          <header class="case-head">
+            <h3>Case 2</h3>
+            <span class="case-meta">Broad QRS · 60 bpm</span>
+          </header>
+          <canvas class="case-canvas" aria-label="Case 2: input PPG, reference ECG, and the selected model's generated ECG"></canvas>
+          <footer class="case-foot">
+            <span class="legend"><i class="sw sw-ppg"></i>PPG <i class="sw sw-ecg"></i>Reference ECG <i class="sw sw-gen"></i><span class="legend-gen">PPG2ECG</span></span>
+            <span class="chip chip-r" data-r="0.90">Pearson <em>r</em> = 0.90</span>
+          </footer>
+        </article>
+        <article class="paper-card case-card reveal" data-case="2" style="--delay: 160ms">
+          <header class="case-head">
+            <h3>Case 3</h3>
+            <span class="case-meta">Regular rhythm · 99 bpm</span>
+          </header>
+          <canvas class="case-canvas" aria-label="Case 3: input PPG, reference ECG, and the selected model's generated ECG"></canvas>
+          <footer class="case-foot">
+            <span class="legend"><i class="sw sw-ppg"></i>PPG <i class="sw sw-ecg"></i>Reference ECG <i class="sw sw-gen"></i><span class="legend-gen">PPG2ECG</span></span>
+            <span class="chip chip-r" data-r="0.93">Pearson <em>r</em> = 0.93</span>
+          </footer>
+        </article>
+      </div>
+
+      <p class="footnote reveal">
+        Each signal is z-scored within its window and plotted on a common scale in the dataset's QRS-upright orientation, without smoothing, time shifts, or rescaling.
+        PPG2ECG follows the reference beat timing and waveform shape in all three windows (<em>r</em> = 0.84, 0.90, 0.93); the four baselines generate recognizable beats, but their peaks often miss the reference peaks (<em>r</em> ≤ 0.21 in these windows).
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ RESULTS ============ -->
+  <section class="section" id="results">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Results on MC-MED</span>
+        <h2>Lower error, physiologically faithful beats</h2>
+        <p class="lead">118,385 emergency-department visits from 70,545 patients at Stanford Health Care, with synchronized PPG and lead II ECG. Mean ± standard deviation over three runs; lower is better unless marked ↑.</p>
+      </div>
+
+      <div class="stats-grid reveal">
+        <div class="stat"><span class="stat-k">MAE ↓</span><span class="stat-v" data-count="0.71" data-decimals="2">0.71</span><span class="stat-s">PPGFlowECG 0.87</span></div>
+        <div class="stat"><span class="stat-k">RMSE ↓</span><span class="stat-v" data-count="1.07" data-decimals="2">1.07</span><span class="stat-s">PPGFlowECG 1.32</span></div>
+        <div class="stat"><span class="stat-k">FID ↓</span><span class="stat-v" data-count="37.79" data-decimals="2">37.79</span><span class="stat-s">PPGFlowECG 44.17</span></div>
+        <div class="stat"><span class="stat-k">HR MAE ↓</span><span class="stat-v" data-count="3.94" data-decimals="2">3.94<small> bpm</small></span><span class="stat-s">PPGFlowECG 7.08</span></div>
+        <div class="stat"><span class="stat-k">R-peak F1 ↑</span><span class="stat-v" data-count="0.74" data-decimals="2">0.74</span><span class="stat-s">CardioFlow 0.28</span></div>
+        <div class="stat"><span class="stat-k">Macro-AUROC ↑</span><span class="stat-v" data-count="0.633" data-decimals="3">0.633</span><span class="stat-s">PaPaGei (PPG-based) 0.543</span></div>
+      </div>
+
+      <div class="table-wrap reveal">
+        <table class="results-table">
+          <thead>
+            <tr><th>Method</th><th>MAE ↓</th><th>RMSE ↓</th><th>FD ↓</th><th>FID ↓</th><th>HR MAE ↓</th><th>Pearson <em>r</em> ↑</th><th>R-peak F1 ↑</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>RDDM</td><td>0.95 ± 0.01</td><td>1.41 ± 0.01</td><td>60.34 ± 0.47</td><td>47.97 ± 0.12</td><td>5.48 ± 0.08</td><td>0.0074 ± 0.0006</td><td>0.26 ± 0.01</td></tr>
+            <tr><td>CardioGAN</td><td>1.07 ± 0.01</td><td>1.46 ± 0.01</td><td>74.17 ± 0.22</td><td>47.01 ± 0.01</td><td>4.71 ± 0.01</td><td>−0.0040 ± 0.0007</td><td>0.06 ± 0.01</td></tr>
+            <tr><td>CardioFlow</td><td>0.94 ± 0.01</td><td>1.35 ± 0.01</td><td>58.78 ± 0.65</td><td>86.77 ± 0.22</td><td>6.83 ± 0.74</td><td>0.0277 ± 0.0004</td><td>0.28 ± 0.01</td></tr>
+            <tr><td>PPGFlowECG</td><td>0.87 ± 0.04</td><td>1.32 ± 0.04</td><td>46.64 ± 1.49</td><td>44.17 ± 0.11</td><td>7.08 ± 0.10</td><td>0.0051 ± 0.0004</td><td>0.15 ± 0.01</td></tr>
+            <tr class="is-ours"><td>PPG2ECG</td><td>0.71 ± 0.04</td><td>1.07 ± 0.05</td><td>39.68 ± 1.96</td><td>37.79 ± 0.27</td><td>3.94 ± 0.76</td><td>0.1906 ± 0.0005</td><td>0.74 ± 0.01</td></tr>
+            <tr class="is-ablation"><td>w/o Sim</td><td>0.84 ± 0.01</td><td>1.28 ± 0.01</td><td>40.51 ± 1.20</td><td>45.90 ± 0.27</td><td>4.94 ± 0.57</td><td>0.1212 ± 0.0018</td><td>0.62 ± 0.01</td></tr>
+            <tr class="is-ablation"><td>w/o PAE</td><td>0.85 ± 0.05</td><td>1.26 ± 0.01</td><td>43.10 ± 0.88</td><td>44.07 ± 0.37</td><td>6.36 ± 0.07</td><td>0.1471 ± 0.0022</td><td>0.71 ± 0.01</td></tr>
+          </tbody>
+        </table>
+        <p class="table-note">HR MAE in bpm. Removing simulator guidance (w/o Sim) or the physiology-aware autoencoder (w/o PAE) degrades waveform error, FID, and heart-rate consistency. External validation on three additional datasets and the cardiovascular disease classification results are in the paper.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BIBTEX ============ -->
+  <section class="section" id="bibtex">
+    <div class="container">
+      <div class="bib-grid">
+        <div class="reveal">
+          <span class="eyebrow">Citation</span>
+          <h2>BibTeX</h2>
+          <div class="bib-box">
+            <button type="button" class="copy-btn" id="copyBib" aria-label="Copy BibTeX">Copy</button>
+<pre id="bibText">@inproceedings{wang2026ppg2ecg,
+  title={PPG2ECG: Physiology-Guided Latent Rectified Flow for Electro-Hemodynamic PPG-to-ECG Generation},
+  author={Wang, Xiaoda and Wang, Minxiao and Han, Kaiqiao and Cao, Defu and Chang, Ching and Shi, Yidan and Yan, Runze and Luo, Xiao and Liu, Yan and Hu, Xiao and Sun, Yizhou and Wang, Wei and Yang, Carl},
+  booktitle={The Fortieth Annual Conference on Neural Information Processing Systems},
+  year={2026}
+}</pre>
+          </div>
+          <p class="footnote bib-note">The arXiv preprint (<a href="https://arxiv.org/abs/2605.12541" target="_blank" rel="noopener">arXiv:2605.12541</a>) appeared under the method's earlier name, PG-LRF.</p>
+        </div>
+        <div class="reveal" style="--delay: 80ms">
+          <span class="eyebrow">Model parameters</span>
+          <h2>Available on request</h2>
+          <p class="lead">Pretrained model parameters are shared on request. Please email <a href="mailto:xiaoda.wang@emory.edu">xiaoda.wang@emory.edu</a> and briefly describe your intended use.</p>
+          <a class="btn btn-ghost" href="https://github.com/ignite-abd/PPG2ECG" target="_blank" rel="noopener">Repository on GitHub →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <span>PPG2ECG · NeurIPS 2026</span>
+    <span>Emory University · UCLA · USC · University of Wisconsin–Madison</span>
+  </div>
+</footer>
+
+<script src="site.js" defer></script>
+</body>
+</html>
