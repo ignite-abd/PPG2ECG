@@ -292,7 +292,6 @@ sup { font-size: 0.68em; line-height: 0; vertical-align: 0.5em; color: var(--mut
 .copy-btn:hover { background: #e9edf3; }
 .copy-btn.is-done { color: var(--ecg); border-color: rgba(21, 137, 106, 0.4); }
 #bibtex .btn { margin-top: 18px; }
-.bib-note { margin-top: 12px; font-size: 13px; }
 #bibtex .lead { font-size: 16px; }
 
 /* ---------- footer ---------- */
