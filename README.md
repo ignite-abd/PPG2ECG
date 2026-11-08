@@ -1,13 +1,29 @@
 # [NeurIPS 2026] PPG2ECG: Physiology-Guided Latent Rectified Flow for Electro-Hemodynamic PPG-to-ECG Generation
 
+![PPG2ECG framework overview](figure/PPG2ECG.png)
+
 ## Overview
 
-PPG2ECG is a physiology-guided latent rectified flow framework for generating ECG from PPG.
-It introduces an electro-hemodynamic simulator that co-models ECG and PPG through shared cardiac phase dynamics.
-Guided by this simulator, a Physiology-Aware AutoEncoder learns a structured electro-hemodynamic latent space,
-and a PPG-conditioned latent rectified flow generates ECG in that space while enforcing ECG-side morphology consistency
-and ECG-to-PPG forward hemodynamic consistency.
+PPG2ECG generates ECG from PPG with a physiology-guided latent rectified flow, built from three components:
+
+- **(a) Electro-Hemodynamic Physiological Simulator**: co-models ECG and PPG through shared cardiac phase dynamics.
+- **(b) Physiology-Aware AutoEncoder**: learns an aligned electro-hemodynamic latent space for PPG and ECG.
+- **(c) Simulator-Guided Latent Rectified Flow**: generates ECG latents conditioned on PPG, regularized by ECG morphology and ECG-to-PPG hemodynamic consistency.
+
 Experiments on the large-scale MC-MED dataset show improved PPG-to-ECG generation and downstream cardiovascular disease classification.
+
+## Case Studies
+
+![Qualitative case studies](figure/case_studies.png)
+
+Three held-out 10-second MC-MED windows from different patients, comparing PPG2ECG (red) with four baselines.
+
+| | Case 1 | Case 2 | Case 3 |
+| :-- | :-: | :-: | :-: |
+| Reference ECG | Noisy, 107 bpm | Broad QRS, 60 bpm | Regular rhythm, 99 bpm |
+| PPG2ECG (Pearson *r*) | **0.84** | **0.90** | **0.93** |
+
+PPG2ECG follows the reference beat timing and waveform shape in all three cases, while the baselines often miss the reference peaks (*r* ≤ 0.21).
 
 ## Model Parameters
 
